@@ -30,4 +30,16 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'shopify' => [
+        'url' => env('SHOPIFY_REST_ADMIN_API_URL'),
+        'password' => env('SHOPIFY_REST_ADMIN_API_PASSWORD'),
+    ],
+
+    'woocommerce' => [
+        'url' => env('WOOCOMMERCE_REST_API_URL'),
+        'consumer_key' => env('WOOCOMMERCE_REST_API_CONSUMER_KEY'),
+        'consumer_secret' => env('WOOCOMMERCE_REST_API_CONSUMER_SECRET'),
+        'version' => env('WOOCOMMERCE_REST_API_VERSION'),
+    ]
+
 ];

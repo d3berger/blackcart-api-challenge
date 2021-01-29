@@ -1,62 +1,102 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## BlackCart E-Commerce API Challenge Question
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Created a products API using Laravel to integrate with e-commerce platform APIs. For the purposes of this challenge, I have only integrated with the `Shopify` and the `WooCommerce` products API.
 
-## About Laravel
+Created a `stores` table that identifies the different platforms.
+- 1 Shopify
+- 2 WooCommerce
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Request structure
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+`GET http://localhost:8989/stores/{storeId}/products`
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Where `{storeId}` is either `1` or `2`.
 
-## Learning Laravel
+## Response structure
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+The response will be a list of products from the e-commerce platform that was specified by the `{storeId}` parameter. 
+The Response is `json`. Format example is below.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+[
+    {
+        "id": 632910392,
+        "name": "IPod Nano - 8GB",
+        "variations": [
+            {
+                "size": [],
+                "colour": [
+                    [
+                        "Pink",
+                        "Red",
+                        "Green",
+                        "Black"
+                    ]
+                ],
+                "quantity": 10,
+                "price": [
+                    {
+                        "currency": "USD",
+                        "amount": "199.00"
+                    }
+                ],
+                "weight": "1.25 lb"
+            },
+            ...
+        ]
+    ],
+    ...
+]
+```
 
-## Laravel Sponsors
+## Setup
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+First clone this repository.
+`git clone blackcart-api-challenge`
 
-### Premium Partners
+Change to cloned directory.
+`cd blackcart-api-challenge`
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
+To setup you will need to have either `PHP` and `composer` installed or use `docker`.
 
-## Contributing
+Install composer dependancies.
+`composer install`
+or
+`docker run --rm -v $(pwd):/app composer install`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Create Laravel environment file.
+`cp .env.example .env`
 
-## Code of Conduct
+Generate key.
+`php artisan key:generate`
+or
+`docker run --rm -v $(pwd):/app -w /app php:7.4-cli php artisan key:generate`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Migrate database.
+`php artisan migrate`
+or
+`docker run --rm -v $(pwd):/app -w /app php:7.4-cli php artisan migrate`
 
-## Security Vulnerabilities
+Start development environment.
+`php artisan serve`
+or
+`docker run --rm -v $(pwd):/app -w /app -p 8989:8989 -it php:7.4 php artisan serve --host=0.0.0.0 --port=8989`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Running tests
 
-## License
+After the environment is setup, you can run tests.
+`php artisan test`
+or
+`docker run --rm -v $(pwd):/app -w /app php:7.4-cli php artisan test`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Adding another e-commerce platform
+
+- To add another platform you would simply add a new row to the `stores` table. 
+- Then create a new `Services` model that extends the `Platform` class. 
+- Then add a case to the `ProductController` with the platform name.
+
+## To Do
+
+- I would have liked to take the data from each e-commerce API platform and save it as a `Product` model. Then I could use a `Resource` to format the data and output as `json` as a `Resource Collection`. That would have made it a bit more towards Laravel conventions.
+- I wish I had better examples of the product data, especially from WoCommerce, to experiment with. I used the data from their API references but with a larger set of data I could have been more confident that the code would be getting all the proper information that was required.
+- Test connecting to the e-commerce platforms to make sure the connection code is working. Currently the connection code is commented out but should be ready to be used with the e-commerce platform when posessing a valid API key etc.
