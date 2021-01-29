@@ -6,13 +6,63 @@ Created a `stores` table that identifies the different platforms.
 - 1 Shopify
 - 2 WooCommerce
 
-## Request structure
+Created tests.
+
+## Setup
+
+First clone this repository.  
+`git clone https://github.com/d3berger/blackcart-api-challenge.git`
+
+Change to cloned directory.  
+`cd blackcart-api-challenge`
+
+To setup you will need to have either `PHP` and `composer` installed or use `docker`.
+
+Install composer dependancies.  
+`composer install`  
+or  
+`docker run --rm -v $(pwd):/app composer install`  
+
+Create Laravel environment file.  
+`cp .env.example .env`
+
+Generate key.  
+`php artisan key:generate`  
+or  
+`docker run --rm -v $(pwd):/app -w /app php:7.4-cli php artisan key:generate`
+
+Create the database.  
+`touch database/database.sqlite`
+
+Migrate database.  
+`php artisan migrate`  
+or  
+`docker run --rm -v $(pwd):/app -w /app php:7.4-cli php artisan migrate`
+
+Seed the database.  
+`php artisan db:seed`  
+or  
+`docker run --rm -v $(pwd):/app -w /app php:7.4-cli php artisan db:seed`
+
+Start development environment.  
+`php artisan serve`  
+or  
+`docker run --rm -v $(pwd):/app -w /app -p 8989:8989 -it php:7.4 php artisan serve --host=0.0.0.0 --port=8989`
+
+## Running tests
+
+After the environment is setup, you can run tests.  
+`php artisan test`  
+or  
+`docker run --rm -v $(pwd):/app -w /app php:7.4-cli php artisan test`
+
+## API Request structure
 
 `GET http://localhost:8989/stores/{storeId}/products`
 
 Where `{storeId}` is either `1` or `2`.
 
-## Response structure
+## API Response structure
 
 The response will be a list of products from the e-commerce platform that was specified by the `{storeId}` parameter. 
 The Response is `json`. Format example is below.
@@ -48,46 +98,6 @@ The Response is `json`. Format example is below.
     ...
 ]
 ```
-
-## Setup
-
-First clone this repository.
-`git clone blackcart-api-challenge`
-
-Change to cloned directory.
-`cd blackcart-api-challenge`
-
-To setup you will need to have either `PHP` and `composer` installed or use `docker`.
-
-Install composer dependancies.
-`composer install`
-or
-`docker run --rm -v $(pwd):/app composer install`
-
-Create Laravel environment file.
-`cp .env.example .env`
-
-Generate key.
-`php artisan key:generate`
-or
-`docker run --rm -v $(pwd):/app -w /app php:7.4-cli php artisan key:generate`
-
-Migrate database.
-`php artisan migrate`
-or
-`docker run --rm -v $(pwd):/app -w /app php:7.4-cli php artisan migrate`
-
-Start development environment.
-`php artisan serve`
-or
-`docker run --rm -v $(pwd):/app -w /app -p 8989:8989 -it php:7.4 php artisan serve --host=0.0.0.0 --port=8989`
-
-## Running tests
-
-After the environment is setup, you can run tests.
-`php artisan test`
-or
-`docker run --rm -v $(pwd):/app -w /app php:7.4-cli php artisan test`
 
 ## Adding another e-commerce platform
 
